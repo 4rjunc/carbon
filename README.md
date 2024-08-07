@@ -4,7 +4,8 @@
 
 Carbon is a decentralized platform for sharing, selling, and purchasing scientific datasets using blockchain technology. Built on Polygon and utilizing Filecoin for storage, Carbon aims to revolutionize how researchers access and monetize scientific data.
 
-![Slides]("https://drive.google.com/file/d/1P2BOqXOft8BJ1V0QK-202wqVFxGXXCHO/view?usp=sharing")
+[Slides]("https://drive.google.com/file/d/1P2BOqXOft8BJ1V0QK-202wqVFxGXXCHO/view?usp=sharing")
+
 Key Features:
 
 - Decentralized data storage using Filecoin
