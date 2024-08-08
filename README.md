@@ -21,6 +21,7 @@ Key Features:
 - Smart Contracts: Solidity
 - Blockchain: Polygon
 - Storage: Filecoin/IPFS
+- Wallet Connnect: Wagmi, Wallet Connect
 - Authentication: Web3 wallets (e.g., MetaMask)
 
 ## Local Setup
