@@ -38,12 +38,11 @@ export default function Home() {
           <Connect />
         </div>
       </nav>
-
       <div className="flex justify-center mt-3">
         {!address ? (
           <Banner />
         ) : (
-          <Tabs defaultValue="account" className="w-100">
+          <Tabs defaultValue="buy" className="w-100">
             <TabsList>
               <TabsTrigger value="buy">Buy 📜</TabsTrigger>
               <TabsTrigger value="sell">Sell 💰</TabsTrigger>

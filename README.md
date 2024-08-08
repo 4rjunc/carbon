@@ -17,7 +17,7 @@ Key Features:
 ## Tech Stack
 
 - Frontend: Next.js, React
-- Styling: Tailwindcss, Daisy UI
+- Styling: Tailwindcss, Flowbite, Shadcn
 - Smart Contracts: Solidity
 - Blockchain: Polygon
 - Storage: Filecoin/IPFS
