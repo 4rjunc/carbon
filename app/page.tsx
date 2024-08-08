@@ -38,24 +38,27 @@ export default function Home() {
           <Connect />
         </div>
       </nav>
-      {!address ? (
-        <Banner />
-      ) : (
-        <Tabs defaultValue="account" className="w-100">
-          <TabsList>
-            <TabsTrigger value="buy">Buy 📜</TabsTrigger>
-            <TabsTrigger value="sell">Sell 💰</TabsTrigger>
-          </TabsList>
-          <TabsContent value="buy">
-            {/*component to buy the papers*/}
-            <Buy />
-          </TabsContent>
-          <TabsContent value="sell">
-            {/*compoent to sell the papers*/}
-            <Sell />
-          </TabsContent>
-        </Tabs>
-      )}
+
+      <div className="flex justify-center mt-3">
+        {!address ? (
+          <Banner />
+        ) : (
+          <Tabs defaultValue="account" className="w-100">
+            <TabsList>
+              <TabsTrigger value="buy">Buy 📜</TabsTrigger>
+              <TabsTrigger value="sell">Sell 💰</TabsTrigger>
+            </TabsList>
+            <TabsContent value="buy">
+              {/*component to buy the papers*/}
+              <Buy />
+            </TabsContent>
+            <TabsContent value="sell">
+              {/*compoent to sell the papers*/}
+              <Sell />
+            </TabsContent>
+          </Tabs>
+        )}
+      </div>
     </main>
   );
 }

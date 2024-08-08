@@ -1,7 +1,8 @@
-import React from "react";
+// add overview of the app
+// add typing effect of share, buy, sell words
 
 const Banner = () => {
-  return <div>Banner</div>;
+  return <div>Welcome Banner</div>;
 };
 
 export default Banner;
