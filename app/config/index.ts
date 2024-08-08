@@ -3,7 +3,8 @@ import { cookieStorage, createStorage } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 
 //console.log("projectId", process.env.NEXT_PUBLIC_WAGMI_PROJECT_ID);
-export const projectId: string = process.env.NEXT_PUBLIC_WAGMI_PROJECT_ID ?? "";
+//export const projectId: string = process.env.NEXT_PUBLIC_WAGMI_PROJECT_ID ?? "";
+export const projectId: string = "f72d04d2ad9c70bdf2070b98605bbf10";
 
 if (!projectId) {
   throw new Error("Project ID is not defined");
