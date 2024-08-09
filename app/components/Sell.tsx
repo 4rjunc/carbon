@@ -99,7 +99,7 @@ const Sell: React.FC = () => {
   };
 
   useEffect(() => {
-    setAddress(account.address?.toString());
+    setAddress(account.address?.toString() || "");
     const timer = setTimeout(() => setProgress(20), 200);
     return () => clearTimeout(timer);
   }, []);
