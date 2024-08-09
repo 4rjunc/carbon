@@ -91,7 +91,7 @@ const Sell: React.FC = () => {
     const output = await lighthouse.upload(
       files,
       apiKey, // Use the passed apiKey instead of lighthouseAPI state
-      null,
+      undefined,
       progressCallback,
     );
     console.log("File Status:", output);
