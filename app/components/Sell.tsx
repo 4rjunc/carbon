@@ -91,10 +91,10 @@ const Sell: React.FC = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     getApiKey();
-    toast({
-      title: "Verificaton Mail Sent! ✉️ ",
-      description: `Please check you mail: ${values.email}`,
-    });
+    //toast({
+    //  title: "Verificaton Mail Sent! ✉️ ",
+    //  description: `Please check you mail: ${values.email}`,
+    //});
     console.log("values", values);
   };
 
