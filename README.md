@@ -10,7 +10,7 @@ Carbon is a decentralized platform for sharing, selling, and purchasing scientif
 
 ## Slides
 
-[Slides](https://drive.google.com/file/d/1P2BOqXOft8BJ1V0QK-202wqVFxGXXCHO/view?usp=sharing)
+[Slides](https://www.canva.com/design/DAGNMp-fO5E/TMqb_qSqj76yWxDi6yXq-A/view?utm_content=DAGNMp-fO5E&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 
 Key Features:
 
