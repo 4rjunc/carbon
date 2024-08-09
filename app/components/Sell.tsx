@@ -34,8 +34,8 @@ const formSchema = z.object({
   price: z.number().min(0, {
     message: "Price must be a positive number.",
   }),
-  file: z.instanceof(File).refine((file) => file.size <= 5000000, {
-    message: "File size must be less than 5MB.",
+  file: z.instanceof(File).refine((file) => file.size <= 10000000, {
+    message: "File size must be less than 10MB.",
   }),
 });
 
@@ -64,7 +64,10 @@ const Sell: React.FC = () => {
         share your knowledge to the world
       </p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-cols-2 gap-4"
+        >
           <FormField
             control={form.control}
             name="authorName"
@@ -109,22 +112,6 @@ const Sell: React.FC = () => {
           />
           <FormField
             control={form.control}
-            name="paperInfo"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Paper Info</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Brief description of your paper"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="price"
             render={({ field }) => (
               <FormItem>
@@ -135,6 +122,22 @@ const Sell: React.FC = () => {
                     step="0.01"
                     {...field}
                     onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="paperInfo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Paper Info</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Brief description of your paper"
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -157,7 +160,7 @@ const Sell: React.FC = () => {
                     {...rest}
                   />
                 </FormControl>
-                <FormDescription>Max file size: 5MB</FormDescription>
+                <FormDescription>Max file size: 10MB</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
