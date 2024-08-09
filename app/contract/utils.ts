@@ -4,7 +4,7 @@ import CarbonMarketplace from "./CarbonMarketplace.json";
 import { useEthersSigner } from "../config/ether";
 import { ethers } from "ethers";
 
-const CONTRACT_ADDRESS = "0x38972f0e23ceFe9b4e810d96bCfC627AE0B67129";
+const CONTRACT_ADDRESS = "0xd369a1d59a375E7771c1A958e2Bf5b6bC0fFAE5D";
 
 export const handlePaperPublish = async (values: any, hash: string) => {
   const signer = useEthersSigner();

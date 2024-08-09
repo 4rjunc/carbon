@@ -19,7 +19,9 @@ import { signMessage } from "@wagmi/core";
 import { config } from "../config/index";
 
 //smart contract action
-import { handlePaperPublish } from "../contract/utils";
+import CarbonMarketplace from "../contract/CarbonMarketplace.json";
+import { ethers } from "ethers";
+//import { handlePaperPublish } from "../contract/utils";
 
 //shadcn components
 import { Button } from "@/components/ui/button";
@@ -57,11 +59,20 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
+const CONTRACT_ADDRESS = "0xd369a1d59a375E7771c1A958e2Bf5b6bC0fFAE5D";
+
 const Sell: React.FC = () => {
   const [progress, setProgress] = useState(5);
   const { toast } = useToast();
   const account = useAccount();
   const [address, setAddress] = useState("");
+  const signer = useEthersSigner();
+  const contract = new ethers.Contract(
+    CONTRACT_ADDRESS,
+    CarbonMarketplace,
+    signer,
+  );
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -72,6 +83,32 @@ const Sell: React.FC = () => {
     },
   });
 
+  //publish paper
+  const handlePaperPublish = async (values: any, hash: string) => {
+    const valueInEther = values.price;
+    const valueInWei = ethers.parseEther(valueInEther.toString());
+    try {
+      const tx = await contract.publishPaper(
+        values.authorName,
+        values.paperTitle,
+        values.paperInfo,
+        valueInWei,
+        hash,
+      );
+      //
+      // Wait for the transaction to be mined
+      // @ts-ignore
+      const receipt = await tx.wait();
+
+      console.log("Transaction successful with hash:", receipt);
+      toast({
+        title: "Your Paper is in Sale",
+        description: "",
+      });
+    } catch (error) {
+      console.error("Error publishing paper:", error);
+    }
+  };
   //progress check
   const progressCallback = (progressData: any) => {
     if (
@@ -196,11 +233,12 @@ const Sell: React.FC = () => {
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Price in Matic</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.01"
+                    step="0.0001"
+                    min="0"
                     {...field}
                     onChange={(e) => field.onChange(parseFloat(e.target.value))}
                   />
