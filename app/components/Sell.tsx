@@ -1,11 +1,20 @@
 //add a file upload modal, contains deatils to be added, title, content brief, author, price
 //upload the file + metadata to ipfs -> store file link + other metadata in ploygon fetch the data to buy page
+import { useEffect, useState } from "react";
+
+//form handling modules
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+//web3.storage
+import { create } from "@web3-storage/w3up-client";
+
 //shadcn components
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
 import {
   Form,
   FormControl,
@@ -15,8 +24,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const formSchema = z.object({
   authorName: z.string().min(2, {
@@ -24,6 +36,9 @@ const formSchema = z.object({
   }),
   email: z.string().email({
     message: "Please enter a valid email address.",
+  }),
+  spaceName: z.string().min(5, {
+    message: "Space name should be at least 5 characters",
   }),
   paperTitle: z.string().min(5, {
     message: "Paper title must be at least 5 characters.",
@@ -42,22 +57,34 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 const Sell: React.FC = () => {
+  const [progress, setProgress] = useState(13);
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       authorName: "",
       email: "",
+      spaceName: "",
       paperTitle: "",
       paperInfo: "",
       price: 0,
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     // implement file coin actions here
-    console.log(values);
-  }
+
+    const client = await create();
+    const space = await client.createSpace(values.spaceName);
+    console.log("values", values, "client", client);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => setProgress(66), 2000);
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <div>
       <p className="text-xl font-semibold font-[#403d39]">
@@ -66,7 +93,7 @@ const Sell: React.FC = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-2 gap-4"
+          className="grid grid-cols-2 gap-10 mt-3"
         >
           <FormField
             control={form.control}
@@ -77,9 +104,6 @@ const Sell: React.FC = () => {
                 <FormControl>
                   <Input placeholder="Your Name" {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -92,6 +116,27 @@ const Sell: React.FC = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input type="email" placeholder="your@email.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />{" "}
+          <FormField
+            control={form.control}
+            name="spaceName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Space Name </FormLabel>
+                <HoverCard>
+                  <HoverCardTrigger className="cursor-pointer">
+                    ❓
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                    to create a space to upload yourfile in web3.storage
+                  </HoverCardContent>
+                </HoverCard>
+                <FormControl>
+                  <Input placeholder="my-secret-space" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,22 +175,6 @@ const Sell: React.FC = () => {
           />
           <FormField
             control={form.control}
-            name="paperInfo"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Paper Info</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Brief description of your paper"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="file"
             render={({ field: { onChange, value, ...rest } }) => (
               <FormItem>
@@ -165,11 +194,32 @@ const Sell: React.FC = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="bg-[#252422] hover:bg-[#eb5e28] ">
-            Submit
+          <FormField
+            control={form.control}
+            name="paperInfo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Paper Info</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Brief description of your paper"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div></div>
+          <Button
+            type="submit"
+            className="bg-[#252422] hover:bg-[#eb5e28] font-semibold w-1/2"
+          >
+            Submit 🚀
           </Button>
         </form>
       </Form>
+      <Progress value={progress} className="w-[60%] mt-3" />
     </div>
   );
 };
