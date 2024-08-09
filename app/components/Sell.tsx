@@ -18,6 +18,9 @@ import { useAccount } from "wagmi";
 import { signMessage } from "@wagmi/core";
 import { config } from "../config/index";
 
+//smart contract action
+import { handlePaperPublish } from "../contract/utils";
+
 //shadcn components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,8 +61,6 @@ const Sell: React.FC = () => {
   const [progress, setProgress] = useState(5);
   const { toast } = useToast();
   const account = useAccount();
-  const signer = useEthersSigner();
-  const [fileHash, setFileHash] = useState<string | null>("");
   const [address, setAddress] = useState("");
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -99,11 +100,11 @@ const Sell: React.FC = () => {
     console.log(
       "Visit at https://gateway.lighthouse.storage/ipfs/" + output.data.Hash,
     );
-    setFileHash(output.data.Hash);
     toast({
       title: "File Uploded in IPFS",
       description: `file hash: ${output.data.Hash}`,
     });
+    return output.data.Hash;
   };
 
   const getApiKey = async () => {
@@ -137,7 +138,9 @@ const Sell: React.FC = () => {
 
       // Use the apiKey directly instead of relying on the state
       if (apiKey) {
-        await uploadFile(values.file, apiKey); // Pass apiKey to uploadFile
+        const fileHash = await uploadFile(values.file, apiKey); // Pass apiKey to uploadFile
+        handlePaperPublish(values, fileHash);
+        setProgress(100);
       } else {
         console.error("Failed to get Lighthouse API key. File upload aborted.");
       }
