@@ -42,19 +42,23 @@ export default function Home() {
         {!address ? (
           <Banner />
         ) : (
-          <Tabs defaultValue="buy" className="w-100">
-            <TabsList>
-              <TabsTrigger value="buy">Buy 📜</TabsTrigger>
-              <TabsTrigger value="sell">Sell 💰</TabsTrigger>
-            </TabsList>
-            <TabsContent value="buy">
-              {/*component to buy the papers*/}
-              <Buy />
-            </TabsContent>
-            <TabsContent value="sell">
-              {/*compoent to sell the papers*/}
-              <Sell />
-            </TabsContent>
+          <Tabs defaultValue="buy" className="w-full">
+            <div className="flex justify-center mb-4">
+              <TabsList>
+                <TabsTrigger value="buy">Buy 📜</TabsTrigger>
+                <TabsTrigger value="sell">Sell 💰</TabsTrigger>
+              </TabsList>
+            </div>
+            <div className="flex justify-center ">
+              <TabsContent value="buy">
+                {/*component to buy the papers*/}
+                <Buy />
+              </TabsContent>
+              <TabsContent value="sell">
+                {/*compoent to sell the papers*/}
+                <Sell />
+              </TabsContent>
+            </div>
           </Tabs>
         )}
       </div>
