@@ -44,9 +44,13 @@ export default function Home() {
         ) : (
           <Tabs defaultValue="buy" className="w-full">
             <div className="flex justify-center mb-4">
-              <TabsList>
-                <TabsTrigger value="buy">Buy 📜</TabsTrigger>
-                <TabsTrigger value="sell">Sell 💰</TabsTrigger>
+              <TabsList className="p-6">
+                <TabsTrigger value="buy" className="text-xl">
+                  Buy 📜
+                </TabsTrigger>
+                <TabsTrigger value="sell" className="text-xl">
+                  Sell 💰
+                </TabsTrigger>
               </TabsList>
             </div>
             <div className="flex justify-center ">
