@@ -3,7 +3,11 @@
 
 const Banner = () => {
   return (
-    <div className="bg-[#fffcf2] h-screen overflow-hidden flex items-center justify-center">
+   <div className="bg-[#fffcf2] h-screen flex items-center justify-center"
+        style={{ 
+          overflow: 'hidden',
+          position: 'fixed',
+        }}>
       <div className="text-center px-4 max-w-4xl mx-auto">
       <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 text-[#252422]">           
         C<span className="text-[#eb5e28]">a</span>rbon         

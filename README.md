@@ -1,4 +1,4 @@
-# Carbon: Decentralized Scientific Data Marketplace
+# <img src="public/molecule_.png" alt="Carbon molecule" width="32" height="32" style="vertical-align: middle;"> Carbon: Decentralized Scientific Data Marketplace
 
 ## Overview
 
