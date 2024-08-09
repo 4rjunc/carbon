@@ -16,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,9 +29,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-const CONTRACT_ADDRESS = "0xd369a1d59a375E7771c1A958e2Bf5b6bC0fFAE5D";
+const CONTRACT_ADDRESS = "0x713b5173E4C01330D9d93f97810480ABEFEA87Ce";
 
 const Buy = () => {
+  const [fileHash, setFileHash] = useState("");
   const signer = useEthersSigner();
   const contract = new ethers.Contract(
     CONTRACT_ADDRESS,
@@ -40,6 +42,8 @@ const Buy = () => {
 
   const [allPapers, setAllPapers] = useState([]);
   console.log("contract:", contract, "signer", signer);
+
+  //fecth papers
   const handleFetch = async () => {
     try {
       const [papers, tokenIds] = await contract.getAllPapers();
@@ -51,62 +55,91 @@ const Buy = () => {
       );
     } catch (error) {
       console.error("Error loading all papers:", error);
-    } finally {
-      console.log("papers", allPapers);
     }
   };
 
+  //buy papers
+  const handleBuyPaper = async (tokenId: any, price: any, fileHash: string) => {
+    try {
+      console.log("Purchase started", tokenId, price, fileHash);
+      const tx = await contract.buyPaper(tokenId, { value: price });
+      await tx.wait();
+      console.log("Paper purchased successfully!");
+      setFileHash(fileHash);
+    } catch (error) {
+      console.error("Error buying paper:", error);
+    }
+  };
   useEffect(() => {
     handleFetch();
   }, []);
 
+  useEffect(() => {
+    console.log("papers", allPapers);
+  }, allPapers);
+
   return (
     <div>
-      <p className="text-xl font-semibold font-[#403d39]">Explore knowledge</p>
+      <p className="text-xl font-semibold font-[#403d39]">
+        Explore knowledge <Button onClick={handleFetch}>Refresh 👀 </Button>
+      </p>
+      {fileHash && (
+        <Button asChild>
+          <a
+            href={`https://gateway.lighthouse.storage/ipfs/${fileHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Click here to access the purchased paper
+          </a>
+        </Button>
+      )}
       {/*create map to feed out papers*/}
-      <div className="mt-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Paper Header</CardTitle>
-            <CardDescription>✍🏼Author: Mithun A. V.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>
-              Lorem ipsum dolor sit amet, qui minim labore adipisicing minim
-              sint cillum sint consectetur cupidatat.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <div className="bg-[#eb5e28] rounded-md py-1 px-3">
-              <AlertDialog>
-                <AlertDialogTrigger className="text-white">
-                  Buy 🎉
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className="hover:bg-[#CCC5B9]">
-                      Cancel ❌{" "}
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      //onClick={handleBuy}
-                      className="hover:bg-[#eb5e28] "
-                    >
-                      Confirm Order ✅{" "}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
-          </CardFooter>
-        </Card>
+      <div className="mt-3 flex flex-col gap-1">
+        {allPapers.map((paper, index) => (
+          <Card className="mb-2" key={index}>
+            <CardHeader>
+              <CardTitle>{paper[1]}</CardTitle>
+              <CardDescription>✍🏼Author: {paper[0]}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>{paper[2]}</p>
+            </CardContent>
+            <CardFooter>
+              <div className="bg-[#eb5e28] rounded-md py-1 px-3">
+                <AlertDialog>
+                  <AlertDialogTrigger className="text-white">
+                    Buy 🎉
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone.{" "}
+                        {ethers.formatEther(paper[3])} MATIC
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="hover:bg-[#CCC5B9]">
+                        Cancel ❌{" "}
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() =>
+                          handleBuyPaper(paper.tokenId, paper[3], paper[4])
+                        }
+                        className="hover:bg-[#eb5e28] "
+                      >
+                        Confirm Order ✅{" "}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </div>
   );

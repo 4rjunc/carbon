@@ -59,7 +59,7 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-const CONTRACT_ADDRESS = "0xd369a1d59a375E7771c1A958e2Bf5b6bC0fFAE5D";
+const CONTRACT_ADDRESS = "0x713b5173E4C01330D9d93f97810480ABEFEA87Ce";
 
 const Sell: React.FC = () => {
   const [progress, setProgress] = useState(5);

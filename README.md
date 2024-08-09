@@ -6,7 +6,7 @@ Carbon is a decentralized platform for sharing, selling, and purchasing scientif
 
 ## Smart Contract
 
-[Smart Contract](https://amoy.polygonscan.com/address/0xa5752293C773E95dA197dF38D17381b733c8A087)
+[Smart Contract](https://amoy.polygonscan.com/address/0x713b5173E4C01330D9d93f97810480ABEFEA87Ce)
 
 ## Slides
 
