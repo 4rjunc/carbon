@@ -71,6 +71,36 @@ const Sell: React.FC = () => {
     },
   });
 
+  //progress check
+  const progressCallback = (progressData: any) => {
+    if (
+      progressData &&
+      typeof progressData.total === "number" &&
+      typeof progressData.uploaded === "number"
+    ) {
+      let percentageDone =
+        100 - (progressData.uploaded / progressData.total) * 100;
+      console.log(percentageDone.toFixed(2));
+    } else {
+      console.log("Invalid progress data");
+    }
+  };
+
+  const uploadFile = async (file: any, apiKey: string) => {
+    const files = Array.isArray(file) ? file : [file];
+    const output = await lighthouse.upload(
+      files,
+      apiKey, // Use the passed apiKey instead of lighthouseAPI state
+      null,
+      progressCallback,
+    );
+    console.log("File Status:", output);
+    setProgress(40);
+    console.log(
+      "Visit at https://gateway.lighthouse.storage/ipfs/" + output.data.Hash,
+    );
+  };
+
   const getApiKey = async () => {
     try {
       const verificationMessage = (
@@ -82,20 +112,33 @@ const Sell: React.FC = () => {
         message: verificationMessage,
       });
       const response = await lighthouse.getApiKey(address, result);
-      console.log("lighthouse reponse", response);
+      console.log("lighthouse response", response);
       setLighthouseAPI(response.data.apiKey);
+      setProgress(25);
+      return response.data.apiKey; // Return the API key
     } catch (error) {
       console.error("getApiKey lighthouse:", error);
+      throw error; // Re-throw the error to be caught in onSubmit
     }
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    getApiKey();
-    //toast({
-    //  title: "Verificaton Mail Sent! ✉️ ",
-    //  description: `Please check you mail: ${values.email}`,
-    //});
-    console.log("values", values);
+    try {
+      console.log("values", values);
+      console.log("File upload started");
+
+      // Call getApiKey and wait for it to finish
+      const apiKey = await getApiKey();
+
+      // Use the apiKey directly instead of relying on the state
+      if (apiKey) {
+        await uploadFile(values.file, apiKey); // Pass apiKey to uploadFile
+      } else {
+        console.error("Failed to get Lighthouse API key. File upload aborted.");
+      }
+    } catch (error) {
+      console.error("Error in onSubmit:", error);
+    }
   };
 
   useEffect(() => {
