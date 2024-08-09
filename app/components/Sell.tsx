@@ -33,21 +33,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 
 const formSchema = z.object({
   authorName: z.string().min(2, {
     message: "Author name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  spaceName: z.string().min(5, {
-    message: "Space name should be at least 5 characters",
   }),
   paperTitle: z.string().min(5, {
     message: "Paper title must be at least 5 characters.",
@@ -76,8 +65,6 @@ const Sell: React.FC = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       authorName: "",
-      email: "",
-      spaceName: "",
       paperTitle: "",
       paperInfo: "",
       price: 0,
@@ -85,17 +72,23 @@ const Sell: React.FC = () => {
   });
 
   const getApiKey = async () => {
-    const verificationMessage = (
-      await axios.get(
-        `https://api.lighthouse.storage/api/auth/get_message?publicKey=${address}`,
-      )
-    ).data;
-    const result = await signMessage(config, {
-      message: verificationMessage,
-    });
-    const response = await lighthouse.getApiKey(address, result);
-    setLighthouseAPI(response.data.apiKey);
+    try {
+      const verificationMessage = (
+        await axios.get(
+          `https://api.lighthouse.storage/api/auth/get_message?publicKey=${address}`,
+        )
+      ).data;
+      const result = await signMessage(config, {
+        message: verificationMessage,
+      });
+      const response = await lighthouse.getApiKey(address, result);
+      console.log("lighthouse reponse", response);
+      setLighthouseAPI(response.data.apiKey);
+    } catch (error) {
+      console.error("getApiKey lighthouse:", error);
+    }
   };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     getApiKey();
     toast({
@@ -107,9 +100,10 @@ const Sell: React.FC = () => {
 
   useEffect(() => {
     setAddress(account.address?.toString());
-    const timer = setTimeout(() => 2000);
+    const timer = setTimeout(() => setProgress(20), 200);
     return () => clearTimeout(timer);
   }, []);
+
   return (
     <div>
       <p className="text-xl font-semibold font-[#403d39]">
@@ -133,40 +127,6 @@ const Sell: React.FC = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="your@email.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />{" "}
-          <FormField
-            control={form.control}
-            name="spaceName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Space Name </FormLabel>
-                <HoverCard>
-                  <HoverCardTrigger className="cursor-pointer">
-                    ❓
-                  </HoverCardTrigger>
-                  <HoverCardContent>
-                    to create a space to upload yourfile in web3.storage
-                  </HoverCardContent>
-                </HoverCard>
-                <FormControl>
-                  <Input placeholder="my-secret-space" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />{" "}
           <FormField
             control={form.control}
             name="paperTitle"
