@@ -1,5 +1,7 @@
 "use client";
 
+import Image from 'next/image';
+
 // wallet component
 import Connect from "./components/Connect";
 
@@ -26,10 +28,11 @@ export default function Home() {
             href="/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
-            <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              className="h-8"
-              alt="carbon"
+            <Image
+              src="/molecule_.png"
+              width={32}
+              height={32}
+              alt="Carbon molecule"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
               carbon
