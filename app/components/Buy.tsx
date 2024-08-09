@@ -127,6 +127,7 @@ const Buy = () => {
                       </AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() =>
+                          // @ts-ignore
                           handleBuyPaper(paper.tokenId, paper[3], paper[4])
                         }
                         className="hover:bg-[#eb5e28] "
