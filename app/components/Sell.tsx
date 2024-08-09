@@ -55,11 +55,11 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 const Sell: React.FC = () => {
-  const [progress, setProgress] = useState(13);
+  const [progress, setProgress] = useState(5);
   const { toast } = useToast();
   const account = useAccount();
   const signer = useEthersSigner();
-  const [lighthouseAPI, setLighthouseAPI] = useState<string | null>("");
+  const [fileHash, setFileHash] = useState<string | null>("");
   const [address, setAddress] = useState("");
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -95,10 +95,15 @@ const Sell: React.FC = () => {
       progressCallback,
     );
     console.log("File Status:", output);
-    setProgress(40);
+    setProgress(50);
     console.log(
       "Visit at https://gateway.lighthouse.storage/ipfs/" + output.data.Hash,
     );
+    setFileHash(output.data.Hash);
+    toast({
+      title: "File Uploded in IPFS",
+      description: `file hash: ${output.data.Hash}`,
+    });
   };
 
   const getApiKey = async () => {
@@ -108,12 +113,12 @@ const Sell: React.FC = () => {
           `https://api.lighthouse.storage/api/auth/get_message?publicKey=${address}`,
         )
       ).data;
+      setProgress(15);
       const result = await signMessage(config, {
         message: verificationMessage,
       });
       const response = await lighthouse.getApiKey(address, result);
       console.log("lighthouse response", response);
-      setLighthouseAPI(response.data.apiKey);
       setProgress(25);
       return response.data.apiKey; // Return the API key
     } catch (error) {
@@ -155,7 +160,7 @@ const Sell: React.FC = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-2 gap-10 mt-3"
+          className="grid grid-cols-2 gap-4 mt-3"
         >
           <FormField
             control={form.control}
