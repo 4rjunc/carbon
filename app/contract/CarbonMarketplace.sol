@@ -1,4 +1,5 @@
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -61,12 +62,25 @@ contract CarbonMarketplace is ERC721 {
         returns (PaperMetadata[] memory)
     {
         uint256[] memory tokenIds = publisherPapers[publisher];
-        PaperMetadata[] memory publisherPapers = new PaperMetadata[](tokenIds.length);
+        PaperMetadata[] memory publisherPapersMetadata = new PaperMetadata[](tokenIds.length);
 
         for (uint256 i = 0; i < tokenIds.length; i++) {
-            publisherPapers[i] = papers[tokenIds[i]];
+            publisherPapersMetadata[i] = papers[tokenIds[i]];
         }
 
-        return publisherPapers;
+        return publisherPapersMetadata;
+    }
+
+    function getAllPapers() public view returns (PaperMetadata[] memory, uint256[] memory) {
+        uint256 totalPapers = _tokenIdCounter.current();
+        PaperMetadata[] memory allPapers = new PaperMetadata[](totalPapers);
+        uint256[] memory tokenIds = new uint256[](totalPapers);
+
+        for (uint256 i = 0; i < totalPapers; i++) {
+            allPapers[i] = papers[i];
+            tokenIds[i] = i;
+        }
+
+        return (allPapers, tokenIds);
     }
 }

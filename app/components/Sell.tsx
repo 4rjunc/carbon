@@ -1,6 +1,10 @@
 //add a file upload modal, contains deatils to be added, title, content brief, author, price
 //upload the file + metadata to ipfs -> store file link + other metadata in ploygon fetch the data to buy page
 import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+
+//axios
+import axios from "axios";
 
 //form handling modules
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,13 +12,18 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 //web3.storage
-import { create } from "@web3-storage/w3up-client";
+import lighthouse from "@lighthouse-web3/sdk";
+import { useEthersSigner } from "../config/ether";
+import { useAccount } from "wagmi";
+import { signMessage } from "@wagmi/core";
+import { config } from "../config/index";
 
 //shadcn components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import { Toaster } from "@/components/ui/toaster";
 import {
   Form,
   FormControl,
@@ -58,7 +67,11 @@ type FormSchema = z.infer<typeof formSchema>;
 
 const Sell: React.FC = () => {
   const [progress, setProgress] = useState(13);
-
+  const { toast } = useToast();
+  const account = useAccount();
+  const signer = useEthersSigner();
+  const [lighthouseAPI, setLighthouseAPI] = useState<string | null>("");
+  const [address, setAddress] = useState("");
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,18 +84,30 @@ const Sell: React.FC = () => {
     },
   });
 
+  const getApiKey = async () => {
+    const verificationMessage = (
+      await axios.get(
+        `https://api.lighthouse.storage/api/auth/get_message?publicKey=${address}`,
+      )
+    ).data;
+    const result = await signMessage(config, {
+      message: verificationMessage,
+    });
+    const response = await lighthouse.getApiKey(address, result);
+    setLighthouseAPI(response.data.apiKey);
+  };
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    // implement file coin actions here
-
-    const client = await create();
-    const space = await client.createSpace(values.spaceName);
-    console.log("values", values, "client", client);
+    getApiKey();
+    toast({
+      title: "Verificaton Mail Sent! ✉️ ",
+      description: `Please check you mail: ${values.email}`,
+    });
+    console.log("values", values);
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => setProgress(66), 2000);
+    setAddress(account.address?.toString());
+    const timer = setTimeout(() => 2000);
     return () => clearTimeout(timer);
   }, []);
   return (
@@ -219,6 +244,7 @@ const Sell: React.FC = () => {
           </Button>
         </form>
       </Form>
+      <Toaster />
       <Progress value={progress} className="w-[60%] mt-3" />
     </div>
   );

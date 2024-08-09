@@ -1,9 +1,6 @@
 // create an infinite scroll to item display
 // when item is clicked openup a modal to pay -> if payment is succesfull -> download the pdf from the web3storage
 
-//ether.js
-import { ethers } from "ethers";
-import CarbonMarketplace from "../contract/CarbonMarketplace.json";
 //ui components
 import {
   Card,

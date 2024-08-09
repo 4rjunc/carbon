@@ -397,6 +397,46 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getAllPapers",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "authorName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "paperName",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "ipfsHash",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct CarbonMarketplace.PaperMetadata[]",
+        "name": "",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
