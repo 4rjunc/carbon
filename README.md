@@ -2,6 +2,8 @@
 
 ## Overview
 
+![image](./carbon.webp)
+
 Carbon is a decentralized platform for sharing, selling, and purchasing scientific datasets using blockchain technology. Built on Polygon and utilizing Filecoin for storage, Carbon aims to revolutionize how researchers access and monetize scientific data.
 
 ## Smart Contract
